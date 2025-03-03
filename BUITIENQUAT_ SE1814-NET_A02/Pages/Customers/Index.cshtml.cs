@@ -98,6 +98,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
                     {
                         _customerRepository.AddCustomers(customers);
                         TempData["SuccessMessage"] = "Customers added successfully from JSON file.";
+                        _hubContext.Clients.All.SendAsync("LoadCustomer"); // Gửi thông báo
                     }
                     else
                     {
@@ -132,6 +133,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
                     {
                         _customerRepository.AddCustomers(customers);
                         TempData["SuccessMessage"] = "Customers added successfully from XML file.";
+                        _hubContext.Clients.All.SendAsync("LoadCustomer"); // Gửi thông báo
                     }
                     else
                     {
