@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArrayOfCustomer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Customer>
+        <CustomerId>C001</CustomerId>
+        <CustomerName>John Doe</CustomerName>
+        <Address>123 Main St</Address>
+        <Phone>123456789</Phone>
+        <DiscountRate>10</DiscountRate>
+    </Customer>
+    <Customer>
+        <CustomerId>C002</CustomerId>
+        <CustomerName>Jane Doe</CustomerName>
+        <Address>456 Elm St</Address>
+        <Phone>987654321</Phone>
+        <DiscountRate>15</DiscountRate>
+    </Customer>
+</ArrayOfCustomer>
