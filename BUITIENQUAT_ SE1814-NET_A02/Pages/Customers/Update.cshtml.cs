@@ -1,8 +1,10 @@
-﻿using BUITIENQUAT__SE1814_NET_A02.Models;
+﻿using BUITIENQUAT__SE1814_NET_A02.Hubs;
+using BUITIENQUAT__SE1814_NET_A02.Models;
 using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Buitienquat_SE1814_NET_A02.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 
 namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
@@ -12,10 +14,12 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
         [BindProperty]
         public Customer Customer { get; set; }
         private readonly ICustomerRepository _customerRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
-        public UpdateModel(ICustomerRepository customerRepository)
+        public UpdateModel(ICustomerRepository customerRepository, IHubContext<SignalRServer> hubContext)
         {
             _customerRepository = customerRepository;
+            _hubContext = hubContext;
         }
 
         public void OnGet(string cusId)
@@ -50,7 +54,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
 
             // Cập nhật đối tượng được theo dõi bởi EF
             _customerRepository.Update(existingCustomer);
-
+            _hubContext.Clients.All.SendAsync("LoadCustomer"); // Gửi thông báo
             return RedirectToPage("./Index");
         }
     }

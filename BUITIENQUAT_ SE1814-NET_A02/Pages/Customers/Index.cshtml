@@ -28,7 +28,7 @@
         <a href="/Customers/Create" class="btn btn-link">Create New</a>
     </div>
 </form>
-<table class="table">
+<table class="table" id="customerTable">
     <thead>
         <tr>
             <th>CustomerId</th>
@@ -39,7 +39,7 @@
             <th>Actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="customerTableBody">
         @foreach (var customer in customers) // Use Model.Customers instead of Model
         {
             <tr>
@@ -61,6 +61,39 @@
 </table>
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="~/lib/signalr/signalr.min.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        // Kết nối tới SignalR Hub
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/signalRServer")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // Xử lý sự kiện LoadCustomer từ Hub
+        connection.on("LoadCustomer", function () {
+            // Gọi AJAX để làm mới bảng khách hàng
+            $.ajax({
+                url: "/Customers/Index",
+                method: "GET",
+                success: function (data) {
+                    // Cập nhật nội dung bảng
+                    $("#customerTableBody").html($(data).find("#customerTableBody").html());
+                    // Cập nhật số lượng khách hàng
+                    var count = $("#customerTableBody tr").length;
+                    $("p:contains('List of Customer count')").text("List of Customer count: " + count);
+                },
+                error: function (err) {
+                    console.error("Error refreshing customer list: ", err);
+                }
+            });
+        });
+
+        // Bắt đầu kết nối
+        connection.start().then(function () {
+            console.log("Connected to SignalR Hub");
+        }).catch(function (err) {
+            console.error("Error connecting to SignalR: ", err.toString());
+        });
+    </script>
 }

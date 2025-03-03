@@ -1,4 +1,5 @@
 ﻿
+using BUITIENQUAT__SE1814_NET_A02.Hubs;
 using BUITIENQUAT__SE1814_NET_A02.Models;
 using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Buitienquat_SE1814_NET_A02.Models;
@@ -17,10 +18,12 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
         public string Message { get; set; }
         //private readonly Ass2SignalRRazorPagesContext _context;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IHubContext<SignalRServer> _hubContext;
 
-        public IndexModel(ICustomerRepository customerRepository)
+        public IndexModel(ICustomerRepository customerRepository, IHubContext<SignalRServer> hubContext)
         {
             _customerRepository = customerRepository;
+            _hubContext = hubContext;
         }
 
         public void OnGet()
@@ -72,7 +75,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
 
             //notyf success
             TempData["SuccessMessage"] = $"Successfully deleted customer with ID: {cusId}";
-
+            _hubContext.Clients.All.SendAsync("LoadCustomer"); // Gửi thông báo
             return RedirectToPage();
         }
 
