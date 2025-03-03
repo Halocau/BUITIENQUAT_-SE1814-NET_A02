@@ -1,0 +1,66 @@
+﻿@page
+@model BUITIENQUAT__SE1814_NET_A02.Pages.Customers.IndexModel
+@using Buitienquat_SE1814_NET_A02.Models
+@{
+	ViewData["Title"] = "Index";
+	List<Customer> customers = ViewData["Customers"] as List<Customer>;
+}
+<form method="post" enctype="multipart/form-data">
+    <div>
+        <label>Discount rate:</label>
+        <input type="number" asp-for="DiscountRate" />
+        <button type="submit" asp-page-handler="Search" class="btn btn-primary">Search</button>
+    </div>
+    <div class="alert alert-info" role="alert">
+        @Model.Message <!-- Display search result message -->
+    </div>
+    <div>
+        <label>Choose File</label>
+        <input type="file" name="file" id="fileInput" />
+        <span> No file chosen</span>
+        <button type="submit" asp-page-handler="UploadJson" class="btn btn-secondary">Add Customers in JSON File</button>
+        <button type="submit" asp-page-handler="UploadXml" class="btn btn-secondary">Add Customers in XML File</button>
+    </div>
+
+    <div>
+        <p>List of Customer count: @customers.Count()</p>
+        <p>List view customer below:</p>
+        <a href="/Customers/Create" class="btn btn-link">Create New</a>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>CustomerId</th>
+            <th>CustomerName</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>DiscountRate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in customers) // Use Model.Customers instead of Model
+        {
+            <tr>
+                <td>@customer.CustomerId</td>
+                <td>@customer.CustomerName</td>
+                <td>@customer.Address</td>
+                <td>@customer.Phone</td>
+                <td>@customer.DiscountRate</td>
+                <td>
+                    <a asp-page="Update" asp-route-cusId="@customer.CustomerId" class="btn btn-sm btn-primary">Edit</a> |
+                    <a href="#" class="btn btn-sm btn-info">Details</a> |
+                    <form method="post" asp-page-handler="Delete" asp-route-cusId="@customer.CustomerId">
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Do you want delete customer?');">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/lib/signalr/signalr.min.js"></script>
+    <script src="~/js/site.js"></script>
+}

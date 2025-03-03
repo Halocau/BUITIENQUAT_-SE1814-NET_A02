@@ -1,0 +1,48 @@
+﻿@page
+@model BUITIENQUAT__SE1814_NET_A02.Pages.Customers.UpdateModel
+@using Buitienquat_SE1814_NET_A02.Models
+@{
+    Customer cus = ViewData["cus"] as Customer;
+    if (cus != null)
+    {
+        Model.Customer = cus; // Gán dữ liệu từ ViewData vào Model.Customer để hiển thị ban đầu
+    }
+}
+<h2>Update Customer</h2>
+
+<form method="post">
+    <input type="hidden" asp-for="Customer.CustomerId" /> <!-- Trường ẩn để giữ CustomerId -->
+    <div class="form-group">
+        <label asp-for="Customer.CustomerId" class="control-label">Customer ID</label>
+        <input asp-for="Customer.CustomerId" class="form-control" disabled /> <!-- Binding với Customer -->
+        <span asp-validation-for="Customer.CustomerId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.CustomerName" class="control-label">Customer Name</label>
+        <input asp-for="Customer.CustomerName" class="form-control" />
+        <span asp-validation-for="Customer.CustomerName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.Address" class="control-label">Address</label>
+        <input asp-for="Customer.Address" class="form-control" />
+        <span asp-validation-for="Customer.Address" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.Phone" class="control-label">Phone</label>
+        <input asp-for="Customer.Phone" class="form-control" />
+        <span asp-validation-for="Customer.Phone" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Customer.DiscountRate" class="control-label">Discount Rate</label>
+        <input asp-for="Customer.DiscountRate" class="form-control" type="number" min="0" max="60" />
+        <span asp-validation-for="Customer.DiscountRate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" /> <!-- Bao gồm script validation -->
+}
