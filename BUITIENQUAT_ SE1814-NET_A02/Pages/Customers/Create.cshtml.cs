@@ -1,6 +1,7 @@
 ﻿
 using BUITIENQUAT__SE1814_NET_A02.Hubs;
 using BUITIENQUAT__SE1814_NET_A02.Models;
+using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Buitienquat_SE1814_NET_A02.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,16 +14,14 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
     {
         [BindProperty]
         public Customer Customer { get; set; }
-        private readonly Ass2SignalRRazorPagesContext _context;
+        private readonly ICustomerRepository _customerRepository;
         private readonly IHubContext<SignalRServer> _hubContext;
 
-        public CreateModel(Ass2SignalRRazorPagesContext context, IHubContext<SignalRServer> hubContext)
+        public CreateModel(ICustomerRepository customerRepository, IHubContext<SignalRServer> hubContext)
         {
-            _context = context;
+            _customerRepository = customerRepository;
             _hubContext = hubContext;
         }
-
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -30,9 +29,9 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
             {
                 return Page();
             }
-            var newCustomer = Customer;
-            _context.Customers.Add(Customer);
-            await _context.SaveChangesAsync();
+
+            _customerRepository.Add(Customer);
+
             // Gửi thông báo qua SignalR
             await _hubContext.Clients.All.SendAsync("LoadCustomer");
             //return RedirectToAction(nameof(Index));

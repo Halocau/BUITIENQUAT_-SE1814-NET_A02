@@ -1,0 +1,38 @@
+﻿@page
+@model BUITIENQUAT__SE1814_NET_A02.Pages.Customers.DetailsModel
+@using Buitienquat_SE1814_NET_A02.Models
+@{
+    ViewData["Title"] = "Customer Details";
+}
+<h2>Customer Details</h2>
+
+@if (Model.Customer == null)
+{
+    <p>Customer not found.</p>
+}
+else
+{
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">Customer ID</dt>
+            <dd class="col-sm-10">@Model.Customer.CustomerId</dd>
+
+            <dt class="col-sm-2">Customer Name</dt>
+            <dd class="col-sm-10">@Model.Customer.CustomerName</dd>
+
+            <dt class="col-sm-2">Address</dt>
+            <dd class="col-sm-10">@Model.Customer.Address</dd>
+
+            <dt class="col-sm-2">Phone</dt>
+            <dd class="col-sm-10">@Model.Customer.Phone</dd>
+
+            <dt class="col-sm-2">Discount Rate</dt>
+            <dd class="col-sm-10">@Model.Customer.DiscountRate</dd>
+        </dl>
+    </div>
+}
+
+<div>
+    <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+    <a asp-page="Update" asp-route-cusId="@Model.Customer?.CustomerId" class="btn btn-primary">Edit</a>
+</div>

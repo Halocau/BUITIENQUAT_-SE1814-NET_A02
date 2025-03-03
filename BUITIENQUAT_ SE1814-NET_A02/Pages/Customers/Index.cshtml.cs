@@ -1,5 +1,6 @@
 ﻿
 using BUITIENQUAT__SE1814_NET_A02.Models;
+using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Buitienquat_SE1814_NET_A02.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,30 +12,30 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
 {
     public class IndexModel : PageModel
     {
-        private readonly Ass2SignalRRazorPagesContext _context;
+        [BindProperty]
+        public int? DiscountRate { get; set; }
+        public string Message { get; set; }
+        //private readonly Ass2SignalRRazorPagesContext _context;
+        private readonly ICustomerRepository _customerRepository;
 
-        public IndexModel(Ass2SignalRRazorPagesContext context)
+        public IndexModel(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
 
         public void OnGet()
         {
-            List<Customer> customers = _context.Customers.ToList();
-            ViewData["Customers"] = customers;
+            ViewData["Customers"] = _customerRepository.GetAllCustomers();
         }
 
-        [BindProperty]
-        public int? DiscountRate { get; set; } // To bind the search input
-        public string Message { get; set; }    // To display search results message
+
         public IActionResult OnPostSearch()
         {
             // Nếu không nhập giá trị
             if (!DiscountRate.HasValue)
             {
-                var customers = _context.Customers.ToList();
                 Message = "Please enter a discount rate to search";
-                ViewData["Customers"] = customers;
+                ViewData["Customers"] = _customerRepository.GetAllCustomers();
                 return Page();
             }
 
@@ -42,44 +43,35 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
             if (DiscountRate.Value >= 0 && DiscountRate.Value <= 60)
             {
                 // Lọc khách hàng có DiscountRate <= giá trị nhập vào
-                var customers = _context.Customers
-                    .Where(c => c.DiscountRate <= DiscountRate.Value)
-                    .ToList();
+                var customers = _customerRepository.SearchCustomersByDiscountRate(DiscountRate.Value);
 
-                if (customers.Any())
-                {
-                    Message = $"Found {customers.Count} customers with discount rate ≤ {DiscountRate}";
-                }
-                else
-                {
-                    Message = $"No customers found with discount rate ≤ {DiscountRate}";
-                }
+                Message = customers.Any() ?
+                      $"Found {customers.Count} customers with discount rate ≤ {DiscountRate}" :
+                      $"No customers found with discount rate ≤ {DiscountRate}";
 
                 ViewData["Customers"] = customers;
             }
             else
             {
                 // Nếu ngoài khoảng [0-60], hiển thị toàn bộ danh sách và thông báo lỗi
-                var customers = _context.Customers.ToList();
                 Message = "Discount rate must be between 0 and 60";
-                ViewData["Customers"] = customers;
+                ViewData["Customers"] = _customerRepository.GetAllCustomers();
             }
 
             return Page();
         }
         public IActionResult OnPostDelete(string cusId)
         {
-            var customerId = _context.Customers.FirstOrDefault(c => c.CustomerId.Equals(cusId));
+            var customerId = _customerRepository.GetCustomerById(cusId);
             if (customerId == null)
             {
                 return NotFound();
             }
             //delete
-            _context.Customers.Remove(customerId);
-            _context.SaveChanges();
+            _customerRepository.DeleteCustomer(customerId);
 
             //notyf success
-            TempData["SuccessMessage"] = $"Đã xóa thành công nhân viên với ID: {cusId}";
+            TempData["SuccessMessage"] = $"Successfully deleted customer with ID: {cusId}";
 
             return RedirectToPage();
         }
@@ -101,8 +93,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
 
                     if (customers != null && customers.Count > 0)
                     {
-                        _context.Customers.AddRange(customers);
-                        _context.SaveChanges();
+                        _customerRepository.AddCustomers(customers);
                         TempData["SuccessMessage"] = "Customers added successfully from JSON file.";
                     }
                     else
@@ -136,8 +127,7 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
 
                     if (customers != null && customers.Count > 0)
                     {
-                        _context.Customers.AddRange(customers);
-                        _context.SaveChanges();
+                        _customerRepository.AddCustomers(customers);
                         TempData["SuccessMessage"] = "Customers added successfully from XML file.";
                     }
                     else

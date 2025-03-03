@@ -50,7 +50,7 @@
                 <td>@customer.DiscountRate</td>
                 <td>
                     <a asp-page="Update" asp-route-cusId="@customer.CustomerId" class="btn btn-sm btn-primary">Edit</a> |
-                    <a href="#" class="btn btn-sm btn-info">Details</a> |
+                    <a asp-page="Details" asp-route-cusId="@customer.CustomerId" class="btn btn-sm btn-info">Details</a>
                     <form method="post" asp-page-handler="Delete" asp-route-cusId="@customer.CustomerId">
                         <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Do you want delete customer?');">Delete</button>
                     </form>

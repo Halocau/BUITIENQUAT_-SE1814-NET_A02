@@ -1,4 +1,5 @@
 ﻿using BUITIENQUAT__SE1814_NET_A02.Models;
+using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Buitienquat_SE1814_NET_A02.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,16 +11,16 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
     {
         [BindProperty]
         public Customer Customer { get; set; }
-        private readonly Ass2SignalRRazorPagesContext _context;
+        private readonly ICustomerRepository _customerRepository;
 
-        public UpdateModel(Ass2SignalRRazorPagesContext context)
+        public UpdateModel(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
 
         public void OnGet(string cusId)
         {
-            Customer cus = _context.Customers.FirstOrDefault(c => c.CustomerId.Equals(cusId));
+            Customer cus = _customerRepository.GetCustomerById(cusId);
             if (cus != null)
             {
                 Customer = cus; // Gán trực tiếp vào Customer để binding với form
@@ -35,21 +36,20 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
             }
 
             // Lấy đối tượng cũ từ database
-            var oldCustomer = _context.Customers.FirstOrDefault(c => c.CustomerId.Equals(Customer.CustomerId));
-            if (oldCustomer == null)
+            var existingCustomer = _customerRepository.GetCustomerById(Customer.CustomerId);
+            if (existingCustomer == null)
             {
-                return NotFound(); // Trả về lỗi nếu không tìm thấy
+                return NotFound();
             }
 
             // Cập nhật các thuộc tính của đối tượng cũ
-            oldCustomer.CustomerName = Customer.CustomerName;
-            oldCustomer.Address = Customer.Address;
-            oldCustomer.Phone = Customer.Phone;
-            oldCustomer.DiscountRate = Customer.DiscountRate;
+            existingCustomer.CustomerName = Customer.CustomerName;
+            existingCustomer.Address = Customer.Address;
+            existingCustomer.Phone = Customer.Phone;
+            existingCustomer.DiscountRate = Customer.DiscountRate;
 
             // Cập nhật đối tượng được theo dõi bởi EF
-            _context.Customers.Update(oldCustomer);
-            _context.SaveChanges();
+            _customerRepository.Update(existingCustomer);
 
             return RedirectToPage("./Index");
         }

@@ -1,6 +1,7 @@
 ﻿using BUITIENQUAT__SE1814_NET_A02;
 using BUITIENQUAT__SE1814_NET_A02.Hubs;
 using BUITIENQUAT__SE1814_NET_A02.Models;
+using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 // đăng kí database ảo cho ứng dụng
 builder.Services.AddDbContext<Ass2SignalRRazorPagesContext>(options =>
 {
