@@ -1,5 +1,4 @@
-﻿using BUITIENQUAT__SE1814_NET_A02;
-using BUITIENQUAT__SE1814_NET_A02.Hubs;
+﻿using BUITIENQUAT__SE1814_NET_A02.Hubs;
 using BUITIENQUAT__SE1814_NET_A02.Models;
 using BUITIENQUAT__SE1814_NET_A02.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -31,3 +30,5 @@ app.UseAuthorization();
 app.MapRazorPages();
 app.MapHub<SignalRServer>("/signalRServer");
 app.Run();
+
+

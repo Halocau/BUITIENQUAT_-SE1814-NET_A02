@@ -20,6 +20,8 @@ namespace BUITIENQUAT__SE1814_NET_A02.Repositories
 
         public void AddCustomers(List<Customer> customers)
         {
+
+
             _context.Customers.AddRange(customers);
             _context.SaveChanges();
         }

@@ -9,22 +9,22 @@
 <form method="post">
     <div class="form-group">
         <label asp-for="Customer.CustomerName" class="control-label">Customer Name</label>
-        <input asp-for="Customer.CustomerName" class="form-control" />
+        <input asp-for="Customer.CustomerName" class="form-control" required />
         <span asp-validation-for="Customer.CustomerName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.Address" class="control-label">Address</label>
-        <input asp-for="Customer.Address" class="form-control" />
+        <input asp-for="Customer.Address" class="form-control" required />
         <span asp-validation-for="Customer.Address" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.Phone" class="control-label">Phone</label>
-        <input asp-for="Customer.Phone" class="form-control" />
+        <input asp-for="Customer.Phone" class="form-control" required />
         <span asp-validation-for="Customer.Phone" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Customer.DiscountRate" class="control-label">Discount Rate</label>
-        <input asp-for="Customer.DiscountRate" class="form-control" type="number" min="0" max="100" />
+        <input asp-for="Customer.DiscountRate" class="form-control" type="number" min="0" max="60" required />
         <span asp-validation-for="Customer.DiscountRate" class="text-danger"></span>
     </div>
     <div class="form-group">

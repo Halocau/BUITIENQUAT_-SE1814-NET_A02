@@ -1,14 +1,27 @@
-﻿@page
+﻿@page 
 @model BUITIENQUAT__SE1814_NET_A02.Pages.Customers.IndexModel
 @using Buitienquat_SE1814_NET_A02.Models
 @{
 	ViewData["Title"] = "Index";
 	List<Customer> customers = ViewData["Customers"] as List<Customer>;
 }
+<!-- Hiển thị thông báo từ TempData -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
 <form method="post" enctype="multipart/form-data">
     <div>
         <label>Discount rate:</label>
-        <input type="number" asp-for="DiscountRate" />
+        <input type="number" asp-for="DiscountRate"  min="0" max="60"  />
         <button type="submit" asp-page-handler="Search" class="btn btn-primary">Search</button>
     </div>
     <div class="alert alert-info" role="alert">

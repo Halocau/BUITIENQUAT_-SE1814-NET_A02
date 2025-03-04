@@ -91,8 +91,8 @@ namespace BUITIENQUAT__SE1814_NET_A02.Pages.Customers
             {
                 using (var stream = new StreamReader(file.OpenReadStream()))
                 {
-                    string jsonContent = stream.ReadToEnd();
-                    var customers = JsonSerializer.Deserialize<List<Customer>>(jsonContent);
+                    string jsonContent = stream.ReadToEnd();// read json 
+                    var customers = JsonSerializer.Deserialize<List<Customer>>(jsonContent);// change
 
                     if (customers != null && customers.Count > 0)
                     {
